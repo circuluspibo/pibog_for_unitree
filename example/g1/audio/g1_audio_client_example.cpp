@@ -107,9 +107,9 @@ int main(int argc, char const *argv[]) {
   /*LED Control Example*/
   client.LedControl(0, 255, 0);
   unitree::common::Sleep(1);
-  client.LedControl(0, 0, 0);
-  unitree::common::Sleep(1);
   client.LedControl(0, 0, 255);
+  unitree::common::Sleep(1);
+  client.LedControl(255, 0, 0);
 
   /*TTS Example*/
   /*
@@ -128,7 +128,7 @@ int main(int argc, char const *argv[]) {
   /*Audio Play Example*/
   int32_t sample_rate = 16000; //-1;
   int8_t num_channels = 1; // 0;
-  bool filestate = false;
+  bool filestate = true //false;
   std::vector<uint8_t> pcm =
       ReadWave(AUDIO_FILE_PATH, &sample_rate, &num_channels, &filestate);
 
