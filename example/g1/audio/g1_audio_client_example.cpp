@@ -8,7 +8,7 @@
 
 #include "wav.hpp"
 
-#define AUDIO_FILE_PATH "../example/g1/audio/output.wav"
+#define AUDIO_FILE_PATH "../example/g1/audio/test.wav"
 #define AUDIO_SUBSCRIBE_TOPIC "rt/audio_msg"
 #define GROUP_IP "239.168.123.161"
 #define PORT 5555
