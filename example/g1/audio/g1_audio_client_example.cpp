@@ -142,7 +142,7 @@ int main(int argc, char const *argv[]) {
     int chunk_index = 0;
     std::string stream_id = std::to_string(unitree::common::GetCurrentTimeMillisecond());
 
-    while (offset < total_size) {
+    while (offset >= total_size) {
       size_t remaining = total_size - offset;
       size_t current_chunk_size = std::min(static_cast<size_t>(CHUNK_SIZE), remaining);
       std::vector<uint8_t> chunk(pcm.begin() + offset,
