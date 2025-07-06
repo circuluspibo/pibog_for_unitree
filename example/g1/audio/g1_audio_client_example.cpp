@@ -104,6 +104,13 @@ int main(int argc, char const *argv[]) {
   ret = client.SetVolume(100);
   std::cout << "SetVolume to 100% , API ret:" << ret << std::endl;
 
+  /*LED Control Example*/
+  client.LedControl(0, 255, 0);
+  unitree::common::Sleep(1);
+  client.LedControl(0, 0, 0);
+  unitree::common::Sleep(1);
+  client.LedControl(0, 0, 255);
+
   /*TTS Example*/
   /*
   ret = client.TtsMaker("你好。我是宇树科技的机器人。例程启动成功",
@@ -119,8 +126,8 @@ int main(int argc, char const *argv[]) {
   unitree::common::Sleep(8);
   */
   /*Audio Play Example*/
-  int32_t sample_rate = -1;
-  int8_t num_channels = 0;
+  int32_t sample_rate = 16000; //-1;
+  int8_t num_channels = 1; // 0;
   bool filestate = false;
   std::vector<uint8_t> pcm =
       ReadWave(AUDIO_FILE_PATH, &sample_rate, &num_channels, &filestate);
@@ -155,12 +162,7 @@ int main(int argc, char const *argv[]) {
     std::cout << "audio file format error, please check!" << std::endl;
   }
 
-  /*LED Control Example*/
-  client.LedControl(0, 255, 0);
-  unitree::common::Sleep(1);
-  client.LedControl(0, 0, 0);
-  unitree::common::Sleep(1);
-  client.LedControl(0, 0, 255);
+
 
   //std::cout << "AudioClient api test finish , asr start..." << std::endl;
 
