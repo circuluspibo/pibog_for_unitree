@@ -156,9 +156,13 @@ int main(int argc, char const *argv[]) {
       offset += current_chunk_size;
     }
 
-    // 마지막 남은 데이터가 있다면 한 번 더 보내기 (예외적 보완은 필요 없음)
-    // 전체 재생 후 종료 메시지
-    std::cout << "Playback finished (played " << total_size << " bytes)." << std::endl;
+    // ✅ 만약 루프가 끝난 후에도 offset < pcm.size()면, 마지막 남은 데이터 보내기
+    if (offset < pcm.size()) {
+        std::vector<uint8_t> last_chunk(pcm.begin() + offset, pcm.end());
+        client.PlayStream("example", stream_id, last_chunk);
+        std::cout << "Playing final chunk: " << last_chunk.size() << " bytes" << std::endl;
+        unitree::common::Sleep(1);
+    }
 
     ret = client.PlayStop(stream_id);  // stop playback after transmission ends
 
