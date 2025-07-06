@@ -8,7 +8,7 @@
 
 #include "wav.hpp"
 
-#define AUDIO_FILE_PATH "../example/g1/audio/output.wav"
+#define AUDIO_FILE_PATH "../example/g1/audio/test.wav"
 #define AUDIO_SUBSCRIBE_TOPIC "rt/audio_msg"
 #define GROUP_IP "239.168.123.161"
 #define PORT 5555
@@ -93,8 +93,9 @@ int main(int argc, char const *argv[]) {
   client.SetTimeout(10.0f);
 
   /*ASR message Example*/
-  //unitree::robot::ChannelSubscriber<std_msgs::msg::dds_::String_> subscriber(AUDIO_SUBSCRIBE_TOPIC);
-  //subscriber.InitChannel(asr_handler);
+  unitree::robot::ChannelSubscriber<std_msgs::msg::dds_::String_> subscriber(
+      AUDIO_SUBSCRIBE_TOPIC);
+  subscriber.InitChannel(asr_handler);
 
   /*Volume Example*/
   uint8_t volume;
@@ -105,7 +106,6 @@ int main(int argc, char const *argv[]) {
   std::cout << "SetVolume to 100% , API ret:" << ret << std::endl;
 
   /*TTS Example*/
-  /*
   ret = client.TtsMaker("你好。我是宇树科技的机器人。例程启动成功",
                         0);  // Auto play
   std::cout << "TtsMaker API ret:" << ret << std::endl;
@@ -117,7 +117,7 @@ int main(int argc, char const *argv[]) {
       1);  // Engilsh TTS
   std::cout << "TtsMaker API ret:" << ret << std::endl;
   unitree::common::Sleep(8);
-  */
+
   /*Audio Play Example*/
   int32_t sample_rate = -1;
   int8_t num_channels = 0;
@@ -162,13 +162,13 @@ int main(int argc, char const *argv[]) {
   unitree::common::Sleep(1);
   client.LedControl(0, 0, 255);
 
-  //std::cout << "AudioClient api test finish , asr start..." << std::endl;
+  std::cout << "AudioClient api test finish , asr start..." << std::endl;
 
-  //std::thread mic_t(thread_mic);
+  std::thread mic_t(thread_mic);
 
-  //while (1) {
-  //  sleep(1);  // wait for asr message
-  //}
-  //mic_t.join();
-  //return 0;
+  while (1) {
+    sleep(1);  // wait for asr message
+  }
+  mic_t.join();
+  return 0;
 }
