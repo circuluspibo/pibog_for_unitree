@@ -128,9 +128,8 @@ int main(int argc, char const *argv[]) {
   /*Audio Play Example*/
   int32_t sample_rate = 16000; //-1;
   int8_t num_channels = 1; // 0;
-  bool filestate = true //false;
-  std::vector<uint8_t> pcm =
-      ReadWave(AUDIO_FILE_PATH, &sample_rate, &num_channels, &filestate);
+  bool filestate = true; //false;
+  std::vector<uint8_t> pcm = ReadWave(AUDIO_FILE_PATH, &sample_rate, &num_channels, &filestate);
 
   std::cout << "wav file sample_rate = " << sample_rate
             << " num_channels =  " << std::to_string(num_channels)
@@ -141,13 +140,11 @@ int main(int argc, char const *argv[]) {
     size_t total_size = pcm.size();
     size_t offset = 0;
     int chunk_index = 0;
-    std::string stream_id =
-        std::to_string(unitree::common::GetCurrentTimeMillisecond());
+    std::string stream_id = std::to_string(unitree::common::GetCurrentTimeMillisecond());
 
     while (offset < total_size) {
       size_t remaining = total_size - offset;
-      size_t current_chunk_size =
-          std::min(static_cast<size_t>(CHUNK_SIZE), remaining);
+      size_t current_chunk_size = std::min(static_cast<size_t>(CHUNK_SIZE), remaining);
       std::vector<uint8_t> chunk(pcm.begin() + offset,
                                  pcm.begin() + offset + current_chunk_size);
       client.PlayStream("example", stream_id, chunk);
