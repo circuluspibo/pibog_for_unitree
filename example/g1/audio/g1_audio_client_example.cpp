@@ -142,8 +142,14 @@ int main(int argc, char const *argv[]) {
     int chunk_index = 0;
     std::string stream_id = std::to_string(unitree::common::GetCurrentTimeMillisecond());
 
-    while (offset < total_size) {
+    while (true) {
       size_t remaining = total_size - offset;
+
+      if(remaining < 0){
+        std::cout << "Playback finished (played " << total_size << " bytes)." << std::endl;
+        break;
+      }
+
       size_t current_chunk_size = std::min(static_cast<size_t>(CHUNK_SIZE), remaining);
 
       std::vector<uint8_t> chunk(pcm.begin() + offset,
@@ -154,14 +160,6 @@ int main(int argc, char const *argv[]) {
 
       std::cout << "Playing offset: " << offset << " / " << total_size << std::endl;
       offset += current_chunk_size;
-    }
-
-    // ✅ 만약 루프가 끝난 후에도 offset < pcm.size()면, 마지막 남은 데이터 보내기
-    if (offset < pcm.size()) {
-        std::vector<uint8_t> last_chunk(pcm.begin() + offset, pcm.end());
-        client.PlayStream("example", stream_id, last_chunk);
-        std::cout << "Playing final chunk: " << last_chunk.size() << " bytes" << std::endl;
-        unitree::common::Sleep(1);
     }
 
     ret = client.PlayStop(stream_id);  // stop playback after transmission ends
