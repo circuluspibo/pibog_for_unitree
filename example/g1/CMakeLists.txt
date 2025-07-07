@@ -21,6 +21,13 @@ add_executable(g1_dex3_example dex3/g1_dex3_example.cpp)
 target_link_libraries(g1_dex3_example unitree_sdk2)
 
 
+add_executable(motor_control high_level/motor_control.cpp)
+target_link_libraries(motor_control unitree_sdk2)
+
+add_executable(robot_client high_level/robot_client.cpp)
+target_link_libraries(robot_client unitree_sdk2)
+
+
 find_package(yaml-cpp QUIET)
 if(yaml-cpp_FOUND)
     if (${yaml-cpp_VERSION} VERSION_GREATER_EQUAL "0.6")
