@@ -40,6 +40,9 @@ int main(int argc, char const *argv[]) {
             << " filestate =" << filestate << "filesize = " << pcm.size()
             << std::endl;
 
+  int dur = 0;
+  int cnt = 0;
+
   if (filestate && sample_rate == 16000 && num_channels == 1) {
     size_t total_size = pcm.size();
     size_t offset = 0;
@@ -47,6 +50,7 @@ int main(int argc, char const *argv[]) {
     std::string stream_id = std::to_string(unitree::common::GetCurrentTimeMillisecond());
 
     while (true) {
+      cnt += 1;
       size_t remaining = total_size - offset;
       size_t current_chunk_size = std::min(static_cast<size_t>(CHUNK_SIZE), remaining);
 
@@ -55,10 +59,15 @@ int main(int argc, char const *argv[]) {
 
       client.PlayStream("example", stream_id, chunk);
       unitree::common::Sleep(1);
-
+    
       std::cout << "Playing offset: " << offset << " / " << total_size << std::endl;
 
-      if(offset == total_size){
+      if(offset == total_size && dur == 0){
+        dur = cnt * 2; // total minus already played
+        cnt = 0;
+      }
+
+      if(cnt == dur - 1){
         std::cout << "Playback finished (played " << total_size << " bytes)." << std::endl;
         break;
       }
