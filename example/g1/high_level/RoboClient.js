@@ -2,7 +2,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 class RobotClient {
-    constructor(executablePath = './robot_client', networkInterface = 'lo') {
+    constructor(executablePath = './robot_client', networkInterface = 'eth0') {
         this.executablePath = executablePath;
         this.networkInterface = networkInterface;
         this.timeout = 10000; // 10 seconds timeout
@@ -192,7 +192,7 @@ class RobotClient {
 
 // Example usage
 async function example() {
-    const robot = new RobotClient('./robot_client', 'lo');
+    const robot = new RobotClient('./robot_client', 'eth0');
     
     try {
         console.log('=== Robot Control Example ===');

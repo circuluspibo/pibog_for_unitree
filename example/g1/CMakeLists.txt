@@ -20,7 +20,6 @@ target_link_libraries(g1_audio_client_example unitree_sdk2)
 add_executable(g1_dex3_example dex3/g1_dex3_example.cpp)
 target_link_libraries(g1_dex3_example unitree_sdk2)
 
-
 add_executable(motor_control high_level/motor_control.cpp)
 target_link_libraries(motor_control unitree_sdk2)
 

@@ -1,9 +1,9 @@
-const RobotClient = require('./robot-client');
+const RobotClient = require('./RobotClient');
 
 // Advanced example with error handling and sequences
 class RobotController {
     constructor() {
-        this.robot = new RobotClient('./robot_client', 'lo');
+        this.robot = new RobotClient('./robot_client', 'eth0');
         this.isRunning = false;
     }
 
