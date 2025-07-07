@@ -48,12 +48,6 @@ int main(int argc, char const *argv[]) {
 
     while (true) {
       size_t remaining = total_size - offset;
-
-      if(offset == total_size){
-        std::cout << "Playback finished (played " << total_size << " bytes)." << std::endl;
-        break;
-      }
-
       size_t current_chunk_size = std::min(static_cast<size_t>(CHUNK_SIZE), remaining);
 
       std::vector<uint8_t> chunk(pcm.begin() + offset,
@@ -63,6 +57,12 @@ int main(int argc, char const *argv[]) {
       unitree::common::Sleep(1);
 
       std::cout << "Playing offset: " << offset << " / " << total_size << std::endl;
+
+      if(offset == total_size){
+        std::cout << "Playback finished (played " << total_size << " bytes)." << std::endl;
+        break;
+      }
+
       offset += current_chunk_size;
     }
 
