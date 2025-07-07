@@ -80,7 +80,7 @@ async def audio(audio_file: UploadFile = File(...)):
 
     # g1_audio 실행
     try:
-        subprocess.Popen(["g1_audio", converted_path]) # async
+        subprocess.Popen(["./g1_audio", converted_path]) # async
         #subprocess.run(["g1_audio", converted_path], check=True)
     except subprocess.CalledProcessError as e:
         return {"error": f"g1_audio 실행 실패: {e}"}
@@ -93,7 +93,7 @@ async def audio(audio_file: UploadFile = File(...)):
 @app.post("/led")
 async def led(r: str = '255', g: str = '255', b: str = '255'):
     try:
-        subprocess.run(["g1_vui", r, g, b], check=True)
+        subprocess.run(["./g1_vui", r, g, b], check=True)
     except subprocess.CalledProcessError as e:
         return {"error": f"g1_vui 실행 실패: {e}"}
 
