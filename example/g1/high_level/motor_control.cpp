@@ -181,7 +181,7 @@ int main(int argc, char const *argv[]) {
         exit(-1);
     }
 
-    unitree::robot::ChannelFactory::Instance()->Init(0, argv[1]);
+    unitree::robot::ChannelFactory::Instance()->Init(0, 'eth0'); // argv[1]
 
     unitree::robot::ChannelPublisherPtr<unitree_hg::msg::dds_::LowCmd_>
         arm_sdk_publisher;

@@ -51,7 +51,7 @@ std::string floatVectorToString(const std::vector<float>& vec) {
 
 int main(int argc, char const *argv[]) {
     try {
-        std::map<std::string, std::string> args = {{"network_interface", "lo"}};
+        std::map<std::string, std::string> args = {{"network_interface", "eth0"}};
 
         // Parse command line arguments
         std::map<std::string, std::string> values;
