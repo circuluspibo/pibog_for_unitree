@@ -63,11 +63,11 @@ int main(int argc, char const *argv[]) {
       std::cout << "Playing offset: " << offset << " / " << total_size << std::endl;
 
       if(offset == total_size && dur == 0){
-        dur = cnt * 2; // total minus already played
+        dur = cnt; // total minus already played
         cnt = 0;
       }
 
-      if(cnt == dur - 1){
+      if(cnt == dur){
         std::cout << "Playback finished (played " << total_size << " bytes)." << std::endl;
         break;
       }
