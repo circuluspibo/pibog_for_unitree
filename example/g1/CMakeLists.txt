@@ -26,6 +26,12 @@ target_link_libraries(motor_control unitree_sdk2)
 add_executable(robot_client high_level/robot_client.cpp)
 target_link_libraries(robot_client unitree_sdk2)
 
+add_executable(g1_audio audio/g1_audio.cpp)
+target_link_libraries(g1_audio unitree_sdk2)
+
+add_executable(g1_vui audio/g1_vui.cpp)
+target_link_libraries(g1_vui unitree_sdk2)
+
 
 find_package(yaml-cpp QUIET)
 if(yaml-cpp_FOUND)

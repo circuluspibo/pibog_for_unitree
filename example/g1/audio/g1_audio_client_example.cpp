@@ -145,7 +145,7 @@ int main(int argc, char const *argv[]) {
     while (true) {
       size_t remaining = total_size - offset;
 
-      if(remaining < 0){
+      if(offset == total_size){
         std::cout << "Playback finished (played " << total_size << " bytes)." << std::endl;
         break;
       }
