@@ -111,6 +111,7 @@ async def connect():
   #global audio_hub
   conn =  Go2WebRTCConnection(WebRTCConnectionMethod.LocalSTA, ip="192.168.123.161") #Go2WebRTCConnection(WebRTCConnectionMethod.LocalAP) #Go2WebRTCConnection(WebRTCConnectionMethod.LocalSTA, ip="192.168.0.101")
   await conn.connect()
+  print("connect okay")
   def lowstate_callback(message):
     #print(message)
     msg = message['data']      
