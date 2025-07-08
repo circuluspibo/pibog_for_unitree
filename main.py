@@ -123,19 +123,14 @@ async def connect():
 
   return { "result" : True, "data" : True }     
 
-@app.get("/arm")
-async def arm(cmd = "clamp"):
-  global conn
-  global G1_ARM
+@app.post("/arm")
+async def arm(id: str = '17'):
+    try:
+        subprocess.run(["./g1_arm", id], check=True)
+    except subprocess.CalledProcessError as e:
+        return {"error": f"arm 실행 실패: {e}"}
 
-  await conn.datachannel.pub_sub.publish_request_new(
-    "rt/api/arm/request", {
-        "api_id": 7106,
-        "parameter" : { "data" : G1_ARM[cmd] }
-    }
-  )
-
-  return { "result" : True, "data" : True }      
+    return {"message": f"arm  설정 완료: ({id})"}      
 
 @app.get("/walk")
 async def walk(lx = 0, ly = 0, rx = 0, ry = 0):
