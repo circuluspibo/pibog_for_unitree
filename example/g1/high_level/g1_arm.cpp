@@ -12,7 +12,7 @@ int main(int argc, const char** argv)
     std::cout << " --- Unitree Robotics --- \n";
     std::cout << "     G1 Arm Action Example (CMD version)     \n\n";
 
-    if (argc < 3) {
+    if (argc < 2) {
         std::cerr << "Usage:\n";
         std::cerr << "  " << argv[0] << " <action_id>\n";
         std::cerr << "Example:\n";
