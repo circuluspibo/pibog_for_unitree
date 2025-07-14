@@ -29,6 +29,9 @@ target_link_libraries(robot_client unitree_sdk2)
 add_executable(g1_arm high_level/g1_arm.cpp)
 target_link_libraries(g1_arm unitree_sdk2)
 
+add_executable(g1_high high_level/g1_high.cpp)
+target_link_libraries(g1_high unitree_sdk2)
+
 add_executable(g1_audio audio/g1_audio.cpp)
 target_link_libraries(g1_audio unitree_sdk2)
 
