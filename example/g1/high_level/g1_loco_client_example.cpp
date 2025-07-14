@@ -63,31 +63,31 @@ int main(int argc, char const *argv[]) {
     if (arg_pair.first == "get_fsm_id") {
       int fsm_id;
       client.GetFsmId(fsm_id);
-      std::cout << "current fsm_id: " << fsm_id << std::endl;
+      std::cout << fsm_id << std::endl;
     }
 
     if (arg_pair.first == "get_fsm_mode") {
       int fsm_mode;
       client.GetFsmMode(fsm_mode);
-      std::cout << "current fsm_mode: " << fsm_mode << std::endl;
+      std::cout << fsm_mode << std::endl;
     }
 
     if (arg_pair.first == "get_balance_mode") {
       int balance_mode;
       client.GetBalanceMode(balance_mode);
-      std::cout << "current balance_mode: " << balance_mode << std::endl;
+      std::cout << balance_mode << std::endl;
     }
 
     if (arg_pair.first == "get_swing_height") {
       float swing_height;
       client.GetSwingHeight(swing_height);
-      std::cout << "current swing_height: " << swing_height << std::endl;
+      std::cout << swing_height << std::endl;
     }
 
     if (arg_pair.first == "get_stand_height") {
       float stand_height;
       client.GetStandHeight(stand_height);
-      std::cout << "current stand_height: " << stand_height << std::endl;
+      std::cout <<  stand_height << std::endl;
     }
 
     if (arg_pair.first == "get_phase") {

@@ -26,11 +26,11 @@ target_link_libraries(motor_control unitree_sdk2)
 add_executable(robot_client high_level/robot_client.cpp)
 target_link_libraries(robot_client unitree_sdk2)
 
-add_executable(g1_arm high_level/g1_arm.cpp)
-target_link_libraries(g1_arm unitree_sdk2)
+add_executable(g1_action high_level/g1_action.cpp)
+target_link_libraries(g1_action unitree_sdk2)
 
-add_executable(g1_high high_level/g1_high.cpp)
-target_link_libraries(g1_high unitree_sdk2)
+add_executable(g1_cmd high_level/g1_cmd.cpp)
+target_link_libraries(g1_cmd unitree_sdk2)
 
 add_executable(g1_audio audio/g1_audio.cpp)
 target_link_libraries(g1_audio unitree_sdk2)

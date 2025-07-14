@@ -123,61 +123,30 @@ async def connect():
 
   return { "result" : True, "data" : True }     
 
-@app.post("/arm")
-async def arm(id: str = '17'):
+@app.post("/action")
+async def action(id: str = '17'):
     try:
-        subprocess.run(["./g1_arm", id], check=True)
+        subprocess.run(["./g1_action", id], check=True)
     except subprocess.CalledProcessError as e:
-        return {"error": f"arm 실행 실패: {e}"}
+        return {"error": f"action 실행 실패: {e}"}
 
-    return {"message": f"arm  설정 완료: ({id})"}      
+    return {"message": f"action  설정 완료: ({id})"}      
 
-@app.get("/walk")
-async def walk(lx = 0, ly = 0, rx = 0, ry = 0):
-  print("walking",f"L : {lx} {ly} | R : {rx} {ry}")
-  global conn
+@app.post("/cmd")
+async def cmd(cmd : str = "set_fsm_id", value : str = None):
+    result = 0
 
-  conn.datachannel.pub_sub.publish_without_callback(
-     "rt/wirelesscontroller", {
-        "lx": float(lx), "ly": float(ly), "rx": float(rx), "ry": float(ry) 
-     }
-  )
-  
-  return { "result" : True, "data" : True }     
+    try:
+        if value != None:
+            subprocess.run(["./g1_cmd", f"--{cmd}={value}"], check=True)
+        else:
+            res = subprocess.run(["./g1_cmd", f"--{cmd}"], check=True, capture_output=True, text=True)
+            result = res.stdout
 
-@app.get("/stateG1")
-async def stateG1(cmd="Walk_G1"):
-  global conn
-  global G1_STATE
+    except subprocess.CalledProcessError as e:
+        return {"result": False, "data": e }
 
-  await conn.datachannel.pub_sub.publish_request_new(
-    "rt/api/sport/request", {
-        "api_id": 7101,
-        "parameter" : { "data" : G1_STATE[cmd] }
-    }
-  )
-
-  return { "result" : True, "data" : True }      
-
-@app.get("/balanceG1")
-async def balanceG1(cmd="Stand_G1"):
-  global conn
-  global G1_BALANCE
-
-  await conn.datachannel.pub_sub.publish_request_new(
-    "rt/api/sport/request", {
-        "api_id": 7102,
-        "parameter" : { "data" : G1_BALANCE[cmd] }
-    }
-  )
-
-  return { "result" : True, "data" : True }    
-
-@app.get("/heartbeat")
-async def heartbeat():
-  global state
-  print(state)
-  return { "result" : True, "data" : state }   
+    return {"result" : True, "data" : result }
 
 @app.get("/video")
 def video():
