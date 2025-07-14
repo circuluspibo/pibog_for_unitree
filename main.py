@@ -57,6 +57,8 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # 정적 파일 서비스 (업로드한 파일 재생 가능)
 app.mount("/files", StaticFiles(directory=UPLOAD_DIR), name="files")
+app.mount("/web", StaticFiles(directory="web"), name="web")
+
 origins = [
     "http://canvers.net",
     "https://canvers.net",   
@@ -133,14 +135,14 @@ async def action(id: str = '17'):
     return {"message": f"action  설정 완료: ({id})"}      
 
 @app.post("/cmd")
-async def cmd(cmd : str = "set_fsm_id", value : str = None):
+async def cmd(key : str = "set_fsm_id", value : str = None):
     result = 0
 
     try:
         if value != None:
-            subprocess.run(["./g1_cmd", f"--{cmd}={value}"], check=True)
+            subprocess.run(["./g1_cmd", f"--{key}={value}"], check=True)
         else:
-            res = subprocess.run(["./g1_cmd", f"--{cmd}"], check=True, capture_output=True, text=True)
+            res = subprocess.run(["./g1_cmd", f"--{key}"], check=True, capture_output=True, text=True)
             result = res.stdout
 
     except subprocess.CalledProcessError as e:
