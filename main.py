@@ -93,19 +93,9 @@ def gen_frames():
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
-@app.get("/", response_class=HTMLResponse)
-async def index():
-    return """
-    <html>
-        <head>
-            <title>웹캠 스트리밍</title>
-        </head>
-        <body>
-            <h1>웹캠 스트리밍</h1>
-            <img src="/video" width="640" height="480" />
-        </body>
-    </html>
-    """
+@app.get("/") # , response_class=HTMLResponse)
+async def main():
+    return {"result" : True}
 
 @app.get("/connect")
 async def connect():
