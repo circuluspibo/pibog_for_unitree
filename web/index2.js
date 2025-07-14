@@ -217,26 +217,26 @@ document.addEventListener('DOMContentLoaded', function() {
             switch(this.id){
                 case 'rotation-center':
                 case 'move-center':
-                    cmd = '/walkG1?lx=0&rx=0&ly=0&ry=0'
+                    cmd = `/cmd?key=move&value=0,0,0`
                     break;                
                 case 'move-up':
-                    cmd = `/walkG1?lx=0&rx=0&ly=${1 * multi}&ry=${1 * multi}`
+                    cmd = `/cmd?key=move&value=0.5,0,0`
                     break;
                 case 'move-down':
-                    cmd = `/walkG1?lx=0&rx=0&ly=${-1 * multi}&ry=${-1 * multi}`
+                    cmd = `/cmd?key=move&value=-0.5,0,0`
                     break;                                        
                 case 'move-left':
-                    cmd = `/walkG1?lx=${-1 * multi}&rx=0&ly=0&ry=0`
+                    cmd = `/cmd?key=move&value=0,0.5,0`
                     break;
                 case 'move-right':
-                    cmd = `/walkG1?lx=${1 * multi}&rx=0&ly=0&ry=0`
+                    cmd = `/cmd?key=move&value=0,-0.5,0`
                     break;
                 case 'rotate-left':
-                    cmd = `/walkG1?lx=0&rx=${-1 * multi}&ly=0&ry=0`
+                    cmd = `/cmd?key=move&value=0,0,0.5`
                     //cmd = `/walkG1?lx=${-0.5 * multi}&rx=${-0.5 * multi}&ly=0&ry=0`
                     break;
                 case 'rotate-right':
-                    cmd = `/walkG1?lx=0&rx=${1 * multi}&ly=0&ry=0`
+                    cmd = `/cmd?key=move&value=0,0,-0.5`
                     //cmd = `/walkG1?lx=${0.5 * multi}&rx=${0.5 * multi}&ly=0&ry=0`
                     break;                    
                 case 'tilt-up':
