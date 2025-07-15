@@ -55,9 +55,12 @@ G1_BALANCE = {
 UPLOAD_DIR = "uploaded_audio"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+app = FastAPI()
+
 # 정적 파일 서비스 (업로드한 파일 재생 가능)
 app.mount("/files", StaticFiles(directory=UPLOAD_DIR), name="files")
 app.mount("/web", StaticFiles(directory="web"), name="web")
+app.mount("/webfonts", StaticFiles(directory="webfonts"), name="webfonts")
 
 origins = [
     "http://canvers.net",
@@ -73,7 +76,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app = FastAPI()
 camera = None
 conn = None
 state = { "charge" : 0, "temp" : 0, "voltage" : 0, "cnt_live" : 0, "cnt_object" : 0 }
@@ -139,6 +141,32 @@ async def cmd(key : str = "set_fsm_id", value : str = None):
         return {"result": False, "data": e }
 
     return {"result" : True, "data" : result }
+
+
+@app.post("/arm")
+async def arm(value : str = 'clamp'):
+    result = 0
+
+    try:
+        subprocess.run(["./g1_cmd", f"--set_fsm_id={G1_ARM[value]}"], check=True)
+
+    except subprocess.CalledProcessError as e:
+        return {"result": False, "data": e }
+
+    return {"result" : True, "data" : result }
+
+@app.post("/state")
+async def state(value : str = 'Walk2_G1'):
+    result = 0
+
+    try:
+        subprocess.run(["./g1_cmd", f"--set_fsm_id={G1_STATE[value]}"], check=True)
+
+    except subprocess.CalledProcessError as e:
+        return {"result": False, "data": e }
+
+    return {"result" : True, "data" : result }
+
 
 @app.get("/video")
 def video():

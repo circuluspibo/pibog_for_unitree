@@ -6,6 +6,7 @@ var rec;                    //Recorder.js object
 var input;                  //MediaStreamAudioSourceNode we'll be recording
 
 let multi = 0.5
+const keysPressed ={}
 
 // shim for AudioContext when it's not avb.
 var AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -297,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if(this.classList.contains('hands'))
                         cmd = `/hand?cmd=${this.id}`
                     else if(this.classList.contains('states'))
-                        cmd = `/stateG1?cmd=${this.id}`                    
+                        cmd = `/state?cmd=${this.id}`                    
                     else
                         cmd = `/arm?cmd=${this.id}`
             }
