@@ -23,7 +23,7 @@ std::vector<float> stringToFloatVector(const std::string &str) {
 
 int main(int argc, char const *argv[]) {
   // Hardcode "eth0" as the network interface
-  std::map<std::string, std::string> args = {{"network_interface", "eth0"}};
+  std::map<std::string, std::string> args = {{"network_interface", "enx00e04d6deed7"}};
 
   // Parse command-line arguments, but skip "network_interface" if provided
   std::map<std::string, std::string> values;
