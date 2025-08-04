@@ -108,7 +108,7 @@ async def generate_depth_image():
                            b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
         await asyncio.sleep(0.1)
 
-G1_ARM = {
+G1_ACTION = {
   "clamp": 17, 
   "highFive": 18, 
   "shakeHands_1": 27,
@@ -245,12 +245,12 @@ async def cmd(key : str = "set_fsm_id", value : str = None):
     return {"result" : True, "data" : result }
 
 
-@app.get("/arm")
-async def arm(value : str = 'clamp'):
+@app.get("/action")
+async def action(value : str = 'clamp'):
     result = 0
 
     try:
-        subprocess.run(["./g1_cmd", f"--set_fsm_id={G1_ARM[value]}"], check=True)
+        subprocess.run(["./g1_action", G1_ACTION[value]], check=True)
 
     except subprocess.CalledProcessError as e:
         return {"result": False, "data": e }
