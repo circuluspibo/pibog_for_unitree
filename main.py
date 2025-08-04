@@ -341,3 +341,6 @@ async def led(r: str = '255', g: str = '255', b: str = '255'):
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000)
 """
+
+success = convert_to_mono_16k_pydub('intel_inside.mp3', 'intel.wav')
+subprocess.Popen(["./g1_audio", 'intel.wav']) # async
