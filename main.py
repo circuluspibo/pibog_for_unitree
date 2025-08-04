@@ -122,7 +122,7 @@ G1_ACTION = {
   "bothHandsUp" : 15,
   "singleHandsUp" : 23,
   "Refuse" : 22, 
-  "Release Arm" : 99,
+  "Release_Arm" : 99,
 }
 
 G1_STATE = {
