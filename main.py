@@ -208,10 +208,10 @@ async def connect():
 
   return { "result" : True, "data" : True }     
 
-@app.post("/action")
-async def action(id: str = '17'):
+@app.get("/arm")
+async def arm(id: str = '17'):
     try:
-        subprocess.run(["./g1_action", id], check=True)
+        subprocess.run(["./g1_arm", id], check=True)
     except subprocess.CalledProcessError as e:
         return {"error": f"action 실행 실패: {e}"}
 
@@ -250,7 +250,7 @@ async def action(value : str = 'clamp'):
     result = 0
 
     try:
-        subprocess.run(["./g1_action", G1_ACTION[value]], check=True)
+        subprocess.run(["./g1_action", str(G1_ACTION[value])], check=True)
 
     except subprocess.CalledProcessError as e:
         return {"result": False, "data": e }
