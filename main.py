@@ -228,7 +228,7 @@ async def depth_image():
     return StreamingResponse(generate_depth_image(), media_type="multipart/x-mixed-replace; boundary=frame")
 
 
-@app.post("/cmd")
+@app.get("/cmd")
 async def cmd(key : str = "set_fsm_id", value : str = None):
     result = 0
 
@@ -245,7 +245,7 @@ async def cmd(key : str = "set_fsm_id", value : str = None):
     return {"result" : True, "data" : result }
 
 
-@app.post("/arm")
+@app.get("/arm")
 async def arm(value : str = 'clamp'):
     result = 0
 
@@ -257,7 +257,7 @@ async def arm(value : str = 'clamp'):
 
     return {"result" : True, "data" : result }
 
-@app.post("/state")
+@app.get("/state")
 async def state(value : str = 'Walk2_G1'):
     result = 0
 
@@ -328,7 +328,7 @@ async def audio(audio_file: UploadFile = File(...)):
         "url": f"/files/converted_{audio_file.filename}"
     }
 
-@app.post("/led")
+@app.get("/led")
 async def led(r: str = '255', g: str = '255', b: str = '255'):
     try:
         subprocess.run(["./g1_vui", r, g, b], check=True)
