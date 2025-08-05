@@ -22,6 +22,7 @@ import pyrealsense2 as rs
 import threading
 import time
 from fastapi.middleware.cors import CORSMiddleware
+from threading import Thread
 
 app = FastAPI()
 
