@@ -306,13 +306,13 @@ def convert_to_mono_16k_pydub(src_path: str, dst_path: str):
         print(f"변환 오류: {e}")
         return False
 
-def process_audio():
+async def process_audio():
     """
     백그라운드에서 오디오를 하나씩 처리하는 함수.
     """
     while True:
         # 큐에서 오디오 파일을 하나씩 가져옴
-        audio_data = audio_queue.get()
+        audio_data = await audio_queue.get()  # 큐에서 비동기적으로 가져오기
         if audio_data is None:
             break  # 큐에 종료 신호가 들어오면 종료
 
@@ -358,13 +358,13 @@ async def audio_task(audio_file: UploadFile):
 @app.post("/audio")
 async def audio(audio_file: UploadFile = File(...)):
     # audio_queue에 요청 추가
-    return await audio_task(audio_file)
+    await audio_task(audio_file)
+    return {"message": "Audio request received, processing started."}
 
-# 별도의 스레드로 audio 프로세싱을 시작
+# 별도의 비동기 루프에서 audio 프로세싱을 시작
 def start_audio_processor():
-    thread = Thread(target=process_audio)
-    thread.daemon = True
-    thread.start()
+    loop = asyncio.get_event_loop()
+    loop.create_task(process_audio())  # 비동기 작업으로 처리 시작
 
 # 앱 시작 시 오디오 프로세서 시작
 start_audio_processor()
