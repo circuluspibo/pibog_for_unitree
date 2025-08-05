@@ -23,6 +23,8 @@ import threading
 import time
 from fastapi.middleware.cors import CORSMiddleware
 from threading import Thread
+from asyncio import Queue
+audio_queue = Queue()  # 오디오 큐
 
 app = FastAPI()
 
@@ -303,9 +305,6 @@ def convert_to_mono_16k_pydub(src_path: str, dst_path: str):
     except Exception as e:
         print(f"변환 오류: {e}")
         return False
-
-from asyncio import Queue
-audio_queue = Queue()  # 오디오 큐
 
 def process_audio():
     """
