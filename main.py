@@ -303,8 +303,75 @@ def convert_to_mono_16k_pydub(src_path: str, dst_path: str):
         print(f"변환 오류: {e}")
         return False
 
+from asyncio import Queue
+audio_queue = Queue()  # 오디오 큐
+
+def process_audio():
+    """
+    백그라운드에서 오디오를 하나씩 처리하는 함수.
+    """
+    while True:
+        # 큐에서 오디오 파일을 하나씩 가져옴
+        audio_data = audio_queue.get()
+        if audio_data is None:
+            break  # 큐에 종료 신호가 들어오면 종료
+
+        original_path, converted_path = audio_data['paths']
+        audio_file = audio_data['file']
+        
+        # 변환 처리
+        success = convert_to_mono_16k_pydub(original_path, converted_path)
+        if not success:
+            print(f"Error converting {audio_file.filename}")
+            continue
+
+        # g1_audio 실행
+        try:
+            process = subprocess.Popen(["./g1_audio", converted_path])  # 비동기 실행
+            process.wait()  # 실행이 끝날 때까지 대기
+        except subprocess.CalledProcessError as e:
+            print(f"Error executing g1_audio: {e}")
+            continue
+        
+        # 완료된 후 메시지
+        print(f"{audio_file.filename} 재생 완료")
+
+async def audio_task(audio_file: UploadFile):
+    original_path = os.path.join(UPLOAD_DIR, audio_file.filename)
+    converted_path = os.path.join(UPLOAD_DIR, f"converted_{audio_file.filename}")
+
+    # 업로드 저장
+    with open(original_path, "wb") as f:
+        shutil.copyfileobj(audio_file.file, f)
+
+    # 큐에 오디오 처리 요청 추가
+    await audio_queue.put({
+        "file": audio_file,
+        "paths": (original_path, converted_path)
+    })
+
+    return {
+        "message": f"{audio_file.filename} 재생 대기 중 (pydub 변환됨)",
+        "url": f"/files/converted_{audio_file.filename}"
+    }
+
 @app.post("/audio")
 async def audio(audio_file: UploadFile = File(...)):
+    # audio_queue에 요청 추가
+    return await audio_task(audio_file)
+
+# 별도의 스레드로 audio 프로세싱을 시작
+def start_audio_processor():
+    thread = Thread(target=process_audio)
+    thread.daemon = True
+    thread.start()
+
+# 앱 시작 시 오디오 프로세서 시작
+start_audio_processor()
+
+"""
+
+
     original_path = os.path.join(UPLOAD_DIR, audio_file.filename)
     converted_path = os.path.join(UPLOAD_DIR, f"converted_{audio_file.filename}")
 
@@ -328,6 +395,8 @@ async def audio(audio_file: UploadFile = File(...)):
         "message": f"{audio_file.filename} 재생 중 (pydub 변환됨)",
         "url": f"/files/converted_{audio_file.filename}"
     }
+
+"""
 
 @app.get("/led")
 async def led(r: str = '255', g: str = '255', b: str = '255'):
