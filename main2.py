@@ -165,8 +165,9 @@ async def depth_image():
     return StreamingResponse(generate_depth_image(), media_type="multipart/x-mixed-replace; boundary=frame")
 
 @app.get("/hands")
-async def hands(name : str = 'fold', selector : str = 'both'):
-    hand.send_motion(name, selector)
+async def hands(cmd : str = 'fold', selector : str = 'both'):
+    hand.send_motion(cmd, selector)
+    hand.send_motion(cmd, selector)
     return {"result" : True}
 
 # --- Depth 데이터 (raw) GET ---
