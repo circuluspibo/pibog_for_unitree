@@ -165,7 +165,7 @@ async def depth_image():
     return StreamingResponse(generate_depth_image(), media_type="multipart/x-mixed-replace; boundary=frame")
 
 @app.get("/hands")
-async def hands(name : str = 'fold', selector : str = 'both):
+async def hands(name : str = 'fold', selector : str = 'both'):
     hand.send_motion(name, selector)
     return {"result" : True}
 
