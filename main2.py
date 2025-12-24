@@ -11,8 +11,6 @@ import os
 import shutil
 from fastapi.staticfiles import StaticFiles
 import asyncio
-from go2_webrtc_driver.webrtc_driver import Go2WebRTCConnection, WebRTCConnectionMethod
-from go2_webrtc_driver.constants import RTC_TOPIC, VUI_COLOR, SPORT_CMD
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse, JSONResponse
@@ -173,3 +171,6 @@ def get_imu():
         if latest_imu_data["accel"] or latest_imu_data["gyro"]:
             return JSONResponse(content=latest_imu_data)
         return JSONResponse(content={"error": "No IMU data available"}, status_code=404)
+
+success = convert_to_mono_16k_pydub('intel_inside.mp3', 'intel.wav')
+subprocess.Popen(["./g1_audio", 'intel.wav']) # async
