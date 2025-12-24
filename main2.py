@@ -22,6 +22,8 @@ import time
 from fastapi.middleware.cors import CORSMiddleware
 from threading import Thread
 from asyncio import Queue
+import mandro
+
 audio_queue = Queue()  # 오디오 큐
 
 app = FastAPI()
@@ -50,6 +52,13 @@ frame_lock = threading.Lock()
 latest_color_frame = None
 latest_depth_frame = None
 latest_imu_data = {'accel': None, 'gyro': None}
+
+try:
+    hand = HandControler('/dev/ttyACM0') # L 컨트롤러 L동글 부터 연결
+    print("컨트롤러 초기화 성공")
+except Exception as e:
+    print(f"컨트롤러 초기화 실패: {e}")
+    exit()
 
 # --- 프레임 수집 쓰레드 ---
 # --- 백그라운드 프레임 수집 시작 ---
@@ -154,6 +163,11 @@ async def video_feed():
 @app.get("/depth_feed")
 async def depth_image():
     return StreamingResponse(generate_depth_image(), media_type="multipart/x-mixed-replace; boundary=frame")
+
+@app.get("/hands")
+async def hands(name : str = 'fold', selector : str = 'both):
+    hand.send_motion(name, selector)
+    return {"result" : True}
 
 # --- Depth 데이터 (raw) GET ---
 @app.get("/depth")
