@@ -22,7 +22,7 @@ import time
 from fastapi.middleware.cors import CORSMiddleware
 from threading import Thread
 from asyncio import Queue
-import mandro
+from mandro import HandControler
 
 audio_queue = Queue()  # 오디오 큐
 
@@ -186,6 +186,3 @@ def get_imu():
         if latest_imu_data["accel"] or latest_imu_data["gyro"]:
             return JSONResponse(content=latest_imu_data)
         return JSONResponse(content={"error": "No IMU data available"}, status_code=404)
-
-success = convert_to_mono_16k_pydub('intel_inside.mp3', 'intel.wav')
-subprocess.Popen(["./g1_audio", 'intel.wav']) # async
