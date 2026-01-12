@@ -176,25 +176,19 @@ async def video_feed():
 async def depth_image():
     return StreamingResponse(generate_depth_image(), media_type="multipart/x-mixed-replace; boundary=frame")
 
-# RGB 비디오 바이너리 전송
 @app.get("/video_raw")
-async def get_video_raw():
+async def video_raw():
     with frame_lock:
-        if latest_color_frame is not None:
-            # (480, 640, 3) uint8 데이터 복사
-            frame_copy = latest_color_frame.copy()
-            return Response(content=frame_copy.tobytes(), media_type="application/octet-stream")
-    return Response(status_code=404)
-
-# Depth 바이너리 전송
-@app.get("/depth_raw")
-async def get_depth_raw():
-    with frame_lock:
-        if latest_depth_frame is not None:
-            # (480, 640) uint16 데이터 복사
-            depth_copy = latest_depth_frame.copy()
-            return Response(content=depth_copy.tobytes(), media_type="application/octet-stream")
-    return Response(status_code=404)
+        if latest_color_frame is not None and latest_depth_frame is not None:
+            # 1. 두 프레임을 바이너리(bytes)로 변환
+            # RGB: 640*480*3 bytes, Depth: 640*480*2 bytes
+            color_bytes = latest_color_frame.tobytes()
+            depth_bytes = latest_depth_frame.tobytes()
+            
+            # 2. 하나로 합쳐서 전송
+            return Response(content=color_bytes + depth_bytes, media_type="application/octet-stream")
+        
+        return JSONResponse(content={"error": "Frames not ready"}, status_code=404)
 
 
 @app.get("/hands")
