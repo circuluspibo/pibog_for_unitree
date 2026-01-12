@@ -103,6 +103,18 @@ async def generate_video():
                            b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
         await asyncio.sleep(0.03)
 
+async def generate_depth_video():
+    while True:
+        with frame_lock:
+            if latest_depth_frame is not None:
+                ret, jpeg = cv2.imencode('.jpg', latest_depth_frame)
+                if ret:
+                    frame = jpeg.tobytes()
+                    yield (b'--frame\r\n'
+                           b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        await asyncio.sleep(0.1)
+
+
 # --- Depth 이미지 스트리밍 ---
 async def generate_depth_image():
     while True:
@@ -163,6 +175,27 @@ async def video_feed():
 @app.get("/depth_feed")
 async def depth_image():
     return StreamingResponse(generate_depth_image(), media_type="multipart/x-mixed-replace; boundary=frame")
+
+# RGB 비디오 바이너리 전송
+@app.get("/video_raw")
+async def get_video_raw():
+    with frame_lock:
+        if latest_color_frame is not None:
+            # (480, 640, 3) uint8 데이터 복사
+            frame_copy = latest_color_frame.copy()
+            return Response(content=frame_copy.tobytes(), media_type="application/octet-stream")
+    return Response(status_code=404)
+
+# Depth 바이너리 전송
+@app.get("/depth_raw")
+async def get_depth_raw():
+    with frame_lock:
+        if latest_depth_frame is not None:
+            # (480, 640) uint16 데이터 복사
+            depth_copy = latest_depth_frame.copy()
+            return Response(content=depth_copy.tobytes(), media_type="application/octet-stream")
+    return Response(status_code=404)
+
 
 @app.get("/hands")
 async def hands(cmd : str = 'fold', selector : str = 'both'):
