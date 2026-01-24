@@ -21,9 +21,6 @@ import threading
 import time
 from fastapi.middleware.cors import CORSMiddleware
 from threading import Thread
-from asyncio import Queue
-
-audio_queue = Queue()  # 오디오 큐
 
 app = FastAPI()
 
@@ -142,20 +139,6 @@ app.add_middleware(
 )
 camera = None
 conn = None
-
-def gen_frames():
-    camera = cv2.VideoCapture(6)
-    while True:
-        success, frame = camera.read()
-        if not success:
-            continue
-        frame = cv2.flip(frame, 1)
-        ret, buffer = cv2.imencode('.jpg', frame)
-        if not ret:
-            continue
-        frame_bytes = buffer.tobytes()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
 @app.get("/") # , response_class=HTMLResponse)
 async def main():
