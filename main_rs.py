@@ -55,26 +55,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from mandro import HandControler
-
-try:
-    hand = HandControler('/dev/ttyACM0') # L 컨트롤러 L동글 부터 연결
-    print("컨트롤러 초기화 성공")
-except Exception as e:
-    print(f"컨트롤러 초기화 실패: {e}")
-    exit()
-
-@app.get("/hands")
-async def hands(cmd : str = 'fold', selector : str = 'both'):
-    if cmd != "release":
-        hand.send_motion(cmd, selector)
-        hand.send_motion(cmd, selector)
-    else:
-        hand.send_release(None, selector)
-        hand.send_release(None, selector)
-    return {"result" : True}
-
-
 # --- 프레임 수집 쓰레드 ---
 # --- 백그라운드 프레임 수집 시작 ---
 def frame_reader():
