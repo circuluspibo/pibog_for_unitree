@@ -193,8 +193,12 @@ async def video_raw():
 
 @app.get("/hands")
 async def hands(cmd : str = 'fold', selector : str = 'both'):
-    hand.send_motion(cmd, selector)
-    hand.send_motion(cmd, selector)
+    if cmd != "release:
+        hand.send_motion(cmd, selector)
+        hand.send_motion(cmd, selector)
+    else:
+        hand.send_release(None, selector)
+        hand.send_release(None, selector)
     return {"result" : True}
 
 # --- Depth 데이터 (raw) GET ---
