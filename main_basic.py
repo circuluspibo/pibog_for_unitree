@@ -124,6 +124,4 @@ def start_audio_processor():
 
 # 앱 시작 시 오디오 프로세서 시작
 start_audio_processor()
-
-success = convert_to_mono_16k_pydub('intel_inside.mp3', 'intel.wav')
 subprocess.Popen(["play", 'intel_inside.mp3']) # async
