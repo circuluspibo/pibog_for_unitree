@@ -32,7 +32,7 @@ except Exception as e:
 
 @app.get("/hands")
 async def hands(cmd : str = 'fold', selector : str = 'both'):
-    if cmd != "release:
+    if cmd != "release":
         hand.send_motion(cmd, selector)
         hand.send_motion(cmd, selector)
     else:
