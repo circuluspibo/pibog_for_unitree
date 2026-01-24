@@ -21,6 +21,17 @@ import threading
 import time
 from fastapi.middleware.cors import CORSMiddleware
 from threading import Thread
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 모든 도메인 허용, 보안을 위해 실제 사용시 제한 필요
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 from mandro import HandControler
 
 try:
@@ -40,15 +51,6 @@ async def hands(cmd : str = 'fold', selector : str = 'both'):
         hand.send_release(None, selector)
     return {"result" : True}
 
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # 모든 도메인 허용, 보안을 위해 실제 사용시 제한 필요
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 
 # --- RealSense 초기화 ---
