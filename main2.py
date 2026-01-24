@@ -22,11 +22,34 @@ import time
 from fastapi.middleware.cors import CORSMiddleware
 from threading import Thread
 
+# --- RealSense 초기화 ---
+print("init realsense")
+pipeline = rs.pipeline()
+config = rs.config()
+config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
+#config.enable_stream(rs.stream.accel)
+#config.enable_stream(rs.stream.gyro)
+
+pipeline.start(config)
+
+frame_lock = threading.Lock()
+latest_color_frame = None
+latest_depth_frame = None
+latest_imu_data = {'accel': None, 'gyro': None}
+
 app = FastAPI()
+
+origins = [
+    "http://canvers.net",
+    "https://canvers.net",   
+    "http://www.canvers.net",
+    "https://www.canvers.net",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 모든 도메인 허용, 보안을 위해 실제 사용시 제한 필요
+    allow_origins=["*"],#origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -50,25 +73,6 @@ async def hands(cmd : str = 'fold', selector : str = 'both'):
         hand.send_release(None, selector)
         hand.send_release(None, selector)
     return {"result" : True}
-
-
-
-# --- RealSense 초기화 ---
-print("init realsense")
-pipeline = rs.pipeline()
-config = rs.config()
-config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
-config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
-#config.enable_stream(rs.stream.accel)
-#config.enable_stream(rs.stream.gyro)
-
-pipeline.start(config)
-
-frame_lock = threading.Lock()
-latest_color_frame = None
-latest_depth_frame = None
-latest_imu_data = {'accel': None, 'gyro': None}
-
 
 
 # --- 프레임 수집 쓰레드 ---
@@ -141,22 +145,6 @@ async def generate_depth_image():
                            b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
         await asyncio.sleep(0.1)
 
-app = FastAPI()
-
-origins = [
-    "http://canvers.net",
-    "https://canvers.net",   
-    "http://www.canvers.net",
-    "https://www.canvers.net",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],#origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 camera = None
 conn = None
 
