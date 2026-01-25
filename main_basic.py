@@ -83,7 +83,7 @@ async def process_audio():
         audio_file = audio_data['file']
         
         try:
-            process = subprocess.Popen(["aplay", original_path])  # 비동기 실행
+            process = subprocess.Popen(["aplay", f"--buffer-size=65536 {original_path}"])  # 비동기 실행
             process.wait()  # 실행이 끝날 때까지 대기
         except subprocess.CalledProcessError as e:
             print(f"Error executing g1_audio: {e}")
