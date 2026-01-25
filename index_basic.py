@@ -1,3 +1,8 @@
+#arm_freq=1200
+#core_freq=300
+#sdram_freq=2500
+#over_voltage=-1
+#force_turbo=0
 
 import uvicorn
 
