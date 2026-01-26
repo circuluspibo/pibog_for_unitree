@@ -124,5 +124,5 @@ def start_audio_processor():
 
 # 앱 시작 시 오디오 프로세서 시작
 start_audio_processor()
-subprocess.Popen(["aplay",, "--buffer-size=65536", 'intel.wav']) # async
+subprocess.Popen(["aplay", "--buffer-size=65536", 'intel.wav']) # async
 # aplay 가 전원 절감효과가 큼... play 를 쓰면 peak 문제가 발생
