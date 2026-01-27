@@ -16,8 +16,7 @@ def f24_pos(ratio):
   result_int = math.floor(combined_value * ratio)
   return [(result_int >> 8) & 0xFF, result_int & 0xFF]
 
-
-def create_command(fingers, action, ratio):
+def create_command(fingers, ratio):
     if fingers[0]:
         position = f1_pos(ratio)
     else:
@@ -30,7 +29,7 @@ def create_command(fingers, action, ratio):
     command.extend([0x05, 0xFF, 0x04, 0x30]) # Bytes 6-7 speed, Bytes 8-9: current
     command.extend(position)         # Bytes 10-11: 위치값 (-5 ~ 400)
     command.append(direction)              # Byte 12: 방향 (forward)
-    return {'pos': command, 'time': sum(e==1 for e in fingers) * ratio*0.8}
+    return {'pos': command, 'time': sum(e==1 for e in fingers) * abs(ratio)*0.8}
 
 # --- 손동작 명령어 딕셔너리 생성 ---
 # 손가락 상태: [엄지, 검지, 중지, 약지, 새끼] (1=활성, 0=비활성)
@@ -39,154 +38,82 @@ def create_command(fingers, action, ratio):
 motions = {
     # --- 기본 동작 ---
     "fold_a": [ # all
-        create_command([1, 0, 0, 0, 0], "fold",     1),
-        create_command([0, 1, 1, 1, 1], "fold",     1),
-    ],
-    "unfold_a": [ #all
-        create_command([0, 1, 1, 1, 1], "unfold",   0.01),
-        create_command([1, 0, 0, 0, 0], "unfold",   0.01),
+        create_command([1, 0, 0, 0, 0],     1),
+        create_command([0, 1, 1, 1, 1],     1),
     ],
     "fold_ha": [ #half all
-        create_command([1, 0, 0, 0, 0], "fold",   0.5),
-        create_command([0, 1, 1, 1, 1], "fold",   0.5),
+        create_command([1, 0, 0, 0, 0],   0.5),
+        create_command([0, 1, 1, 1, 1],   0.5),
     ],
-    "unfold_ha": [ #half all
-        create_command([0, 1, 1, 1, 1], "unfold", 0.5),
-        create_command([1, 0, 0, 0, 0], "unfold", 0.5),
-    ],
-
     # --- 조합 동작 --o-
     "point": [
-        #create_command([0, 1, 0, 0, 0], "unfold",   1),
-
-        create_command([0, 0, 1, 1, 1], "fold",     1),
-        create_command([1, 0, 0, 0, 0], "fold",     1),
+        create_command([0, 0, 1, 1, 1],     1),
+        create_command([1, 0, 0, 0, 0],     1),
     ],
-    "point-exit": [
-        create_command([0, 0, 1, 1, 1], "unfold",   1),
-        create_command([1, 0, 0, 0, 0], "unfold",   1),
-    ],
-
     "handshake": [
-        #create_command([0, 1, 1, 1, 1], "unfold",   1),
-        #create_command([1, 0, 0, 0, 0], "unfold",   1),
-
-        create_command([0, 1, 1, 1, 1], "fold",   0.3),
+        create_command([0, 1, 1, 1, 1],   0.3),
     ],
-    "handshake-exit": [
-        create_command([0, 1, 1, 1, 1], "unfold", 0.3),
-    ],
-
     "ok": [
-        #create_command([0, 0, 1, 1, 1], "unfold",   1),
-        create_command([1, 0, 0, 0, 0], "fold",   0.5),
-        create_command([0, 1, 0, 0, 0], "fold",   0.9),
+        create_command([1, 0, 0, 0, 0],   0.5),
+        create_command([0, 1, 0, 0, 0],   0.9),
     ],
-    "ok-exit": [
-        create_command([0, 1, 0, 0, 0], "unfold", 0.9),
-        create_command([1, 0, 0, 0, 0], "unfold", 0.5),
-    ],
-
     "thumbup": [
-        #create_command([1, 0, 0, 0, 0], "unfold",   1),
-        create_command([0, 1, 1, 1, 1], "fold",     1),
+        create_command([0, 1, 1, 1, 1],     1),
     ],
-    "thumbup-exit": [
-        create_command([0, 1, 1, 1, 1], "unfold",   1),
-    ],
-
     "victory": [
-        #create_command([0, 1, 1, 0, 0], "unfold",   1),
-        create_command([1, 0, 0, 0, 0], "fold",     1),
-        create_command([0, 0, 0, 1, 1], "fold",     1),
+        create_command([1, 0, 0, 0, 0],     1),
+        create_command([0, 0, 0, 1, 1],     1),
     ],
-    "victory-exit": [
-        create_command([0, 0, 0, 1, 1], "unfold",   0.01),
-        create_command([1, 0, 0, 0, 0], "unfold",   0.01),
-    ],
-
     "rock": [
-        #create_command([0, 1, 0, 0, 1], "unfold",   1),
-        #create_command([1, 0, 0, 0, 0], "unfold",   1),
-        create_command([0, 0, 1, 1, 0], "fold",     1),
+        create_command([0, 0, 1, 1, 0],     1),
     ],
-    "rock-exit": [
-        create_command([0, 0, 1, 1, 0], "unfold",   0.01),
-    ],
-
     "promise": [
-        #create_command([0, 0, 0, 0, 1], "unfold",   1),
-        create_command([1, 0, 0, 0, 0], "fold",     1),
-        create_command([0, 1, 1, 1, 0], "fold",     1),
+        create_command([1, 0, 0, 0, 0],     1),
+        create_command([0, 1, 1, 1, 0],     1),
     ],
-    "promise-exit": [
-        create_command([0, 1, 1, 1, 0], "unfold",   0.01),
-        create_command([1, 0, 0, 0, 0], "unfold",   0.01),
-    ],
-
     "grab": [
-        #create_command([0, 1, 1, 1, 1], "unfold",   1),
-        #create_command([1, 0, 0, 0, 0], "unfold",   1),
-        create_command([1, 0, 0, 0, 0], "fold",   0.5),
-        create_command([0, 1, 1, 1, 1], "fold",   0.5),
-    ],
-    "grab-exit": [
-        create_command([0, 1, 1, 1, 1], "unfold", 0.5),
-        create_command([1, 0, 0, 0, 0], "unfold", 0.5),
+        create_command([1, 0, 0, 0, 0],   0.5),
+        create_command([0, 1, 1, 1, 1],   0.5),
     ],
 }
 
 releases = {
     "fold_a": [ #all
-        create_command([0, 1, 1, 1, 1], "unfold",   0.01),
-        create_command([1, 0, 0, 0, 0], "unfold",   0.01),
+        create_command([0, 1, 1, 1, 1],   -0.05),
+        create_command([1, 0, 0, 0, 0],   -0.05),
     ],
-
     "fold_ha": [ #half all
-        create_command([0, 1, 1, 1, 1], "unfold", 0.5),
-        create_command([1, 0, 0, 0, 0], "unfold", 0.5),
+        create_command([0, 1, 1, 1, 1], -0.05),
+        create_command([1, 0, 0, 0, 0], -0.05),
     ],
-
-
     "point": [
-        create_command([0, 0, 1, 1, 1], "unfold",   0.01),
-        create_command([1, 0, 0, 0, 0], "unfold",   0.01),
+        create_command([0, 0, 1, 1, 1],  -0.05),
+        create_command([1, 0, 0, 0, 0],  -0.05),
     ],
-
     "handshake": [
-        create_command([0, 1, 1, 1, 1], "unfold", 0.7),
+        create_command([0, 1, 1, 1, 1], -0.05),
     ],
-
-
     "ok": [
-        create_command([0, 1, 0, 0, 0], "unfold", 0.1),
-        create_command([1, 0, 0, 0, 0], "unfold", 0.5),
+        create_command([0, 1, 0, 0, 0], -0.05),
+        create_command([1, 0, 0, 0, 0], -0.05),
     ],
-
-
     "thumbup": [
-        create_command([0, 1, 1, 1, 1], "unfold",   0.01),
+        create_command([0, 1, 1, 1, 1],   0.01),
     ],
-
-
     "victory": [
-        create_command([0, 0, 0, 1, 1], "unfold",   0.01),
-        create_command([1, 0, 0, 0, 0], "unfold",   0.01),
+        create_command([0, 0, 0, 1, 1],   0.01),
+        create_command([1, 0, 0, 0, 0],   0.01),
     ],
-
-
     "rock": [
-        create_command([0, 0, 1, 1, 0], "unfold",   0.01),
+        create_command([0, 0, 1, 1, 0],   0.01),
     ],
-
     "promise": [
-        create_command([0, 1, 1, 1, 0], "unfold",   0.01),
-        create_command([1, 0, 0, 0, 0], "unfold",   0.01),
+        create_command([0, 1, 1, 1, 0],   0.01),
+        create_command([1, 0, 0, 0, 0],   0.01),
     ],
-
     "grab": [
-        create_command([0, 1, 1, 1, 1], "unfold", 0.5),
-        create_command([1, 0, 0, 0, 0], "unfold", 0.5),
+        create_command([0, 1, 1, 1, 1], 0.5),
+        create_command([1, 0, 0, 0, 0], 0.5),
     ],
 }
 
