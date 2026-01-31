@@ -88,6 +88,26 @@ origins = [
     "https://www.canvers.net",
 ]
 
+from mandro import HandControler
+
+try:
+    hand = HandControler('/dev/ttyACM0') # L 컨트롤러 L동글 부터 연결
+    print("컨트롤러 초기화 성공")
+except Exception as e:
+    print(f"컨트롤러 초기화 실패: {e}")
+    exit()
+
+@app.get("/hands")
+async def hands(cmd : str = 'fold', selector : str = 'both'):
+    if cmd != "release":
+        hand.send_motion(cmd, selector)
+        hand.send_motion(cmd, selector)
+    else:
+        hand.send_release(None, selector)
+        hand.send_release(None, selector)
+    return {"result" : True}
+
+
 @app.get("/") # , response_class=HTMLResponse)
 async def main():
     return {"result" : True}
