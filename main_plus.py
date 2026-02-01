@@ -11,8 +11,6 @@ import os
 import shutil
 from fastapi.staticfiles import StaticFiles
 import asyncio
-from go2_webrtc_driver.webrtc_driver import Go2WebRTCConnection, WebRTCConnectionMethod
-from go2_webrtc_driver.constants import RTC_TOPIC, VUI_COLOR, SPORT_CMD
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse, JSONResponse
