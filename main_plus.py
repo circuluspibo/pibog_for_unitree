@@ -98,7 +98,7 @@ def convert_to_mono_16k_pydub(src_path: str, dst_path: str):
         print(f"변환 오류: {e}")
         return False
 
-from mandro import HandControler
+from mandro_plus import HandControler
 
 try:
     hand = HandControler('/dev/ttyACM0') # L 컨트롤러 L동글 부터 연결
