@@ -33,7 +33,7 @@ if len(devices) < 2:
 
 # 2. 두 번째 장치의 시리얼 번호 추출
 serial = devices[1].get_info(rs.camera_info.serial_number)
-print(f"2번째 카메라 연결 중 (S/N: {target_serial})")
+print(f"2번째 카메라 연결 중 (S/N: {serial})")
 
 pipeline = rs.pipeline()
 config = rs.config()
