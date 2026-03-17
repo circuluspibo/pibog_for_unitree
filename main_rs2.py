@@ -23,9 +23,21 @@ from fastapi.middleware.cors import CORSMiddleware
 from threading import Thread
 
 # --- RealSense 초기화 ---
-print("init realsense")
+print("init realsense 2")
+# 1. 연결된 장치 목록 가져오기
+ctx = rs.context()
+devices = ctx.query_devices()
+
+if len(devices) < 2:
+    print("연결된 카메라가 2대 미만입니다.")
+    return
+# 2. 두 번째 장치의 시리얼 번호 추출
+serial = devices[1].get_info(rs.camera_info.serial_number)
+print(f"2번째 카메라 연결 중 (S/N: {target_serial})")
+
 pipeline = rs.pipeline()
 config = rs.config()
+config.enable_device(serial) # 추출한 번호 적용
 config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
 #config.enable_stream(rs.stream.accel)
