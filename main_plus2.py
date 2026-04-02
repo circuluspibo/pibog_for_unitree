@@ -51,13 +51,9 @@ _IP = "192.168.21.19"
 # "192.168.12.128" - g1 basic pohang
 # "192.168.21.19" - g1 plus
 
-print(_IP)
-
 # Enable logging for debugging
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
-
-_PORT = int(open("port.txt", 'r').read())
 
 
 conn = None
@@ -130,11 +126,11 @@ async def connect2():
   #conn.video.add_track_callback(recv_camera_stream)
   #print(3)
   def lowstate_callback(message):
-    #print(message)
-    msg = message['data']      
-    state["charge"] = msg['bms_state']['soc']
-    state["temp"] = msg['temperature_ntc1']
-    state["voltage"] = msg['power_v']
+    print(message)
+    #msg = message['data']      
+    #state["charge"] = msg['bms_state']['soc']
+    #state["temp"] = msg['temperature_ntc1']
+    #state["voltage"] = msg['power_v']
 
   conn.datachannel.pub_sub.subscribe(RTC_TOPIC['LOW_STATE'], lowstate_callback)
 
