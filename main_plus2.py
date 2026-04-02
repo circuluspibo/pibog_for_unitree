@@ -114,7 +114,7 @@ def main():
   return { "result" : True, "data" : "AI-CPU-V2", "ip" : _IP, "port" : _PORT }      
 
 @app.get("/connect")
-async def connect2():
+async def connect():
   global conn
   #global audio_hub
   conn =  UnitreeWebRTCConnection(WebRTCConnectionMethod.LocalSTA, ip="192.168.123.161") #Go2WebRTCConnection(WebRTCConnectionMethod.LocalSTA, ip="192.168.0.101")
@@ -344,5 +344,10 @@ async def color(value : str = 'red'):
   print("color", arr)
   response = requests.get(f"http://{_IP}:59521/led?r={arr[0]}&g={arr[1]}&b={arr[2]}")
   return { "result" : True }
+
+# Register startup event
+@app.on_event("startup")
+async def startup_event():
+    await connect()  # Call your specific function
 
 print("TEST","2502010900")
